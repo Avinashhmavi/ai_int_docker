@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HR & Banking Interviewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #5054a2;
+            --primary-dark: #3772b6;
+            --secondary: #333333;
+            --accent: #e3120b;
+            --light: #f8f8f8;
+            --dark: #222222;
+            --gray: #777777;
+            --light-gray: #999797;
+            --success: #388e3c;
+            --warning: #ffa000;
+            --danger: #d32f2f;
+            --transition: all 0.3s ease;
+        }
+
+        * { 
+            margin: 10; 
+            padding: 10; 
+            box-sizing: border-box; 
+        }
+.navbar {
+    background-color: white;
+    border-bottom: 4px solid #2d6cdf;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.nav-left {
+    flex: 0 0 auto;
+}
+
+.logo-img {
+    height: 70px;
+    vertical-align: middle;
+}
+
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-font-smoothing: antialiased;
+    font-family: Rubik (sans-serif);
+    font-weight: bolder;
+    color: #343080;
+    font-size: 2.00rem;
+    text-transform: uppercase;
+}
+
+
+
+
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: white;
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: var(--primary);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            -webkit-font-smoothing: antialiased;
+            font-family: "PT Serif", georgia, times, serif;
+            font-size: 2.8rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin: 30px 0 20px;
+            
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgb(244, 244, 244);
+            border: 1px solid #f1f1f1;
+            padding: 25px;
+            transition: var(--transition);
+            position: relative;
+            height: 100%;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .card-title i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .reply {
+            background-color: var(--light-gray);
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feedback {
+            background-color: rgba(255, 170, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .score {
+            font-weight: 700;
+            color: var(--success);
+            margin-top: 15px;
+        }
+
+        .overall-score {
+            background-color: var(--light-gray);
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .overall-score h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button i {
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #f1f1f1;
+            font-family: 'Merriweather', serif;
+            font-size: 1rem;
+            margin: 20px 0;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #f1f1f1;
+            font-family: 'Merriweather', serif;
+            font-size: 1rem;
+            margin: 15px 0;
+            background-color: white;
+        }
+
+        .file-upload-wrapper {
+            border: 2px dashed #d2d1d1;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload-wrapper i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .radio-option {
+            border: 1px solid #e9e9e9;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary);
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            color: var(--primary);
+        }
+
+        .radio-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .radio-option i {
+            font-size: 1.8rem;
+            color: var(--gray);
+        }
+
+        .radio-option input[type="radio"]:checked + label i {
+            color: var(--primary);
+        }
+
+        .camera-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #f1f1f1;
+        }
+
+        .camera-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+
+        }
+
+        #camera-feed-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: var(--light-gray);
+            margin: 30px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        #camera-feed-container {
+            margin: 20px 0;
+        }
+
+        #camera-feed {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+        }
+
+        .status-text {
+            font-style: italic;
+            color: var(--gray);
+            margin: 10px 0;
+            min-height: 1.2em; /* Ensure space for text */
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for the start button */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgb(16, 137, 184); }
+            70% { box-shadow: 0 0 0 10px rgba(227, 18, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 18, 11, 0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Timer Display Styles */
+        #timer-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--primary);
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .timer-display i {
+            font-size: 1.8rem;
+        }
+
+        #timer-text {
+            font-family: 'Roboto Condensed', monospace;
+            letter-spacing: 2px;
+        }
+
+        .timer-warning {
+            color: var(--warning) !important;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-critical {
+            color: var(--danger) !important;
+            animation: pulse 0.5s infinite;
+        }
+
+        /* Evaluation blocks */
+        .evaluation-block {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .evaluation-block:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <img src="static/logo.png" alt="T.I.M.E. Logo" class="logo-img">
+        </div>
+        <div class="nav-center">
+            <span id="app-title">Interviewer</span>
+        </div>
+    </div>
+</nav>
+
+
+        <section id="start-section" class="section">
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-file-upload"></i>
+                        <h3>Upload Resume</h3>
+                    </div>
+                    <div class="file-upload-wrapper">
+                        <label class="file-upload-label" for="resume-file">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Drag & drop your resume here or click to browse</span>
+                            <small>Supports PDF and DOCX files</small>
+                            <input type="file" id="resume-file" accept=".pdf,.docx" required>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-road"></i>
+                        <h3>Interview Track</h3>
+                    </div>
+                    <label for="interview-track">Select interview track:</label>
+                    <select id="interview-track" onchange="toggleSubTrack()"></select>
+                    <div id="sub-track-section">
+                        <label for="sub-track">Select specific area:</label>
+                        <select id="sub-track"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-globe"></i>
+                        <h3>Language & AI Voice</h3>
+                    </div>
+                    <label for="language">Language (for voice recognition):</label>
+                    <select id="language">
+                        <option value="en-IN">English (India)</option>
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                    </select>
+                    <label for="voice-model">Voice model (for AI responses):</label>
+                    <select id="voice-model">
+                        <option value="alloy">Alloy</option>
+                        <option value="echo">Echo</option>
+                        <option value="fable">Fable</option>
+                        <option value="onyx">Onyx</option>
+                        <option value="nova">Nova</option>
+                        <option value="shimmer">Shimmer</option>
+                        <option value="sage">Sage</option>
+                    </select>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-comments"></i>
+                        <h3>Communication Mode</h3>
+                    </div>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="mode-text" name="mode" value="text" checked>
+                            <label for="mode-text">
+                                <i class="fas fa-keyboard"></i>
+                                Text Mode
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="mode-voice" name="mode" value="voice">
+                            <label for="mode-voice">
+                                <i class="fas fa-microphone"></i>
+                                Voice Mode
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-camera"></i>
+                    <h3>Visual Analysis</h3>
+                </div>
+                <div class="camera-option">
+                    <input type="checkbox" id="enable-camera" name="enable-camera">
+                    <label for="enable-camera">
+                        Enable Camera for Visual Analysis & Snapshots
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="startInterview()" class="pulse">
+                <i class="fas fa-play"></i> Start Interview
+            </button>
+        </section>
+
+        <section id="question-section" class="section" style="display: none;">
+            <div class="card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p id="progress-text" class="status-text"></p>
+                
+                <!-- Timer Display -->
+                <div id="timer-container" style="display: none;">
+                    <div class="timer-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer-text">02:00</span>
+                    </div>
+                </div>
+                
+                <p id="question-text" class="question"></p>
+                
+                <div id="camera-feed-container">
+                    <video id="camera-feed" width="320" height="240" autoplay playsinline muted style="display: none;"></video>
+                </div>
+                
+                <p id="status-text" class="status-text"></p>
+                <textarea id="answer-input" placeholder="Type your answer here..."></textarea>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button id="submit-btn" onclick="submitAnswer()" style="display: none;">
+                        <i class="fas fa-paper-plane"></i> Submit Answer
+                    </button>
+                    <button id="pause-btn" onclick="togglePause()" style="display: none;" class="btn-outline">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                </div>
+                
+                <div id="reply-text" class="reply" style="display: none;"></div>
+                <div id="feedback-box" class="feedback" style="display: none;">
+                    <label for="feedback-input"><strong>Your Feedback on this Question:</strong></label>
+                    <textarea id="feedback-input" placeholder="Share your thoughts about this question..."></textarea>
+                    <button onclick="submitFeedback()" class="btn-outline">
+                           <i class="fas fa-comment-dots"></i> Submit Feedback
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="summary-section" class="section" style="display: none;">
+            <div class="card">
+                <h2><i class="fas fa-clipboard-check"></i> Interview Summary</h2>
+                <div id="evaluations"></div>
+                <div id="overall-score" class="overall-score"></div>
+                <div id="feedback-box" class="feedback">
+    <label for="feedback-input"><strong>Your Feedback about the Interview Experience:</strong></label>
+    <textarea id="feedback-input" placeholder="We value your input..."></textarea>
+    <button onclick="submitFeedback()" class="btn-outline">
+        <i class="fas fa-comment-dots"></i> Submit Feedback
+    </button>
+</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let totalQuestions = 0;
+        let useVoice = false;
+        let useCamera = false;
+        let questionNumber = 0;
+        let isPaused = false;
+        let recognition;
+        let silenceTimer;
+        let currentAudio = null;
+        let cameraStream = null;
+        let frameAnalysisInterval = null;
+        let isSpeaking = false; // True when AI is speaking
+        let isListening = false; // True when STT is active
+        let accumulatedTranscript = '';
+        let programmaticStop = false; // Flag to indicate if recognition.stop() was called by our logic
+        
+        // Timer variables
+        let questionTimer = null;
+        let timeRemaining = 120; // 2 minutes in seconds
+        let timerInterval = null;
+
+        function setupSpeechRecognition() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = () => {
+                    console.log('STT: Recognition started.');
+                    document.getElementById('status-text').textContent = '🎤 Listening... Speak clearly.';
+                };
+
+                recognition.onresult = (event) => {
+                    if (isPaused || isSpeaking) return;
+
+                    clearTimeout(silenceTimer);
+
+                    let interim = '', finalThisTurn = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalThisTurn += transcript + ' ';
+                        } else {
+                            interim = transcript;
+                        }
+                    }
+
+                    const answerInput = document.getElementById('answer-input');
+                    if (finalThisTurn) {
+                        accumulatedTranscript += finalThisTurn;
+                    }
+                    answerInput.value = accumulatedTranscript + interim;
+
+                    if (finalThisTurn.trim().length > 0) {
+                        silenceTimer = setTimeout(() => {
+                            if (isListening && !isSpeaking && !isPaused) {
+                                console.log('STT: 10s silence detected. Submitting answer.');
+                                programmaticStop = true;
+                                if (recognition) recognition.stop();
+                                document.getElementById('status-text').textContent = '🧠 Processing your answer...';
+                                submitAnswer();
+                            }
+                        }, 10000);
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('STT: onerror fired:', event);
+                    if (event.error === 'no-speech') {
+                        // Retry recognition after a short delay
+                        setTimeout(() => {
+                            if (isListening && !isSpeaking && !isPaused) {
+                                console.log('STT: Retrying after no-speech error');
+                                try {
+                                    recognition.start();
+                                } catch (e) {
+                                    console.error('STT: Retry failed:', e);
+                                    document.getElementById('status-text').textContent = 'Microphone error. Please check your microphone settings.';
+                                    isListening = false;
+                                }
+                            }
+                        }, 1000);
+                    } else if (event.error === 'network') {
+                        console.error('STT: Network error detected');
+                        document.getElementById('status-text').textContent = 'Network error. Please check your internet connection and try again.';
+                        isListening = false;
+                        clearTimeout(silenceTimer);
+                        
+                        // Attempt to recover after network error
+                        setTimeout(() => {
+                            if (!isSpeaking && !isPaused) {
+                                console.log('STT: Attempting to recover from network error');
+                                try {
+                                    recognition.start();
+                                } catch (e) {
+                                    console.error('STT: Recovery failed:', e);
+                                    document.getElementById('status-text').textContent = 'Unable to recover from network error. Please try again later.';
+                                }
+                            }
+                        }, 3000);
+                    } else {
+                        document.getElementById('status-text').textContent = `Speech error: ${event.error}. Please check microphone.`;
+                        isListening = false;
+                        clearTimeout(silenceTimer);
+                        
+                        // For other errors, attempt recovery after a delay
+                        setTimeout(() => {
+                            if (!isSpeaking && !isPaused) {
+                                console.log('STT: Attempting to recover from error:', event.error);
+                                try {
+                                    recognition.start();
+                                } catch (e) {
+                                    console.error('STT: Recovery failed:', e);
+                                }
+                            }
+                        }, 2000);
+                    }
+                };
+
+                recognition.onend = () => {
+                    const wasProgrammaticallyStopped = programmaticStop;
+                    if (programmaticStop) {
+                        programmaticStop = false;
+                    }
+                    isListening = false;
+
+                    if (!wasProgrammaticallyStopped) {
+                        console.log('STT: Recognition ended unexpectedly.');
+                        if (document.getElementById('status-text').textContent.startsWith('🎤 Listening...')) {
+                            document.getElementById('status-text').textContent = 'Listening session ended.';
+                        }
+                    }
+                };
+            } else {
+                console.warn('STT not supported.');
+                const voiceRadio = document.querySelector('input[value="voice"]');
+                if (voiceRadio) voiceRadio.disabled = true;
+                const voiceLabel = document.querySelector('label[for="mode-voice"]');
+                if (voiceLabel) voiceLabel.textContent += ' (Not Supported by Browser)';
+            }
+        }
+        
+        function stopCurrentAudioPlayback() {
+            if (currentAudio) {
+                try {
+                    currentAudio.pause();
+                    currentAudio.onended = null;
+                    currentAudio.onerror = null;
+                    if (currentAudio.src && currentAudio.src.startsWith('blob:')) {
+                        URL.revokeObjectURL(currentAudio.src);
+                    }
+                    currentAudio.src = '';
+                    currentAudio.load();
+                } catch (e) {
+                    console.error('Error stopping audio:', e);
+                } finally {
+                    currentAudio = null;
+                    isSpeaking = false;
+                }
+            }
+        }
+
+        function stopAllVoiceActivity(isIntentionalStop = false) {
+            stopCurrentAudioPlayback(); // Stop TTS
+            
+            if (recognition && isListening) { // Stop STT
+                console.log('STT: StopAllVoiceActivity calling recognition.stop()');
+                programmaticStop = isIntentionalStop; // Mark this as an intentional stop
+                recognition.stop(); // This will trigger onend, where isListening will be set to false
+            } else {
+                isListening = false; // Ensure listening is marked false if not active but function is called
+            }
+            
+            isSpeaking = false; // Not speaking anymore
+            clearTimeout(silenceTimer); // Clear any pending silence timer
+        }
+
+
+        async function speakText(text, callback) {
+            if (isSpeaking) {
+                console.warn("TTS: speakText called while already speaking. Ignoring new request.");
+                if (callback) callback();
+                return;
+            }
+
+            stopAllVoiceActivity(true);
+            
+            isSpeaking = true;
+            document.getElementById('status-text').textContent = 'Interviewer is speaking...';
+            console.log("TTS: Speaking - ", text.substring(0,50) + "...");
+
+            try {
+                const response = await fetch('/generate_speech', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        text, 
+                        voice: document.getElementById('voice-model').value,
+                        language: document.getElementById('language').value 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    throw new Error(`TTS generation failed: ${response.status} ${errorData}`);
+                }
+                
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                // Create new audio instance
+                const audio = new Audio(audioUrl);
+                currentAudio = audio;
+                
+                // Set up event handlers before playing
+                audio.onended = () => {
+                    console.log("TTS: Finished speaking.");
+                    stopCurrentAudioPlayback();
+                    if (document.getElementById('status-text').textContent === 'Interviewer is speaking...') {
+                        document.getElementById('status-text').textContent = '';
+                    }
+                    if (callback) {
+                        try {
+                            callback();
+                        } catch (callbackError) {
+                            console.error('TTS: Callback error:', callbackError);
+                        }
+                    }
+                };
+
+                audio.onerror = (e) => {
+                    console.error('TTS: Playback error:', e);
+                    stopCurrentAudioPlayback();
+                    document.getElementById('status-text').textContent = 'Error playing AI voice.';
+                    if (callback) {
+                        try {
+                            callback();
+                        } catch (callbackError) {
+                            console.error('TTS: Callback error:', callbackError);
+                        }
+                    }
+                };
+
+                // Add loadeddata event handler
+                audio.onloadeddata = () => {
+                    console.log("TTS: Audio data loaded, attempting playback.");
+                };
+
+                // Add canplaythrough event handler
+                audio.oncanplaythrough = () => {
+                    console.log("TTS: Audio can play through, starting playback.");
+                };
+
+                // Play the audio with retry logic
+                let playAttempts = 0;
+                const maxPlayAttempts = 3;
+                
+                const attemptPlay = async () => {
+                    try {
+                        await audio.play();
+                        console.log("TTS: Playback started successfully.");
+                    } catch (playError) {
+                        console.error(`TTS: Play attempt ${playAttempts + 1} failed:`, playError);
+                        playAttempts++;
+                        
+                        if (playAttempts < maxPlayAttempts) {
+                            console.log(`TTS: Retrying playback (attempt ${playAttempts + 1}/${maxPlayAttempts})...`);
+                            setTimeout(attemptPlay, 1000); // Wait 1 second before retry
+                        } else {
+                            console.error('TTS: Max play attempts reached, giving up.');
+                            stopCurrentAudioPlayback();
+                            throw new Error('Failed to play audio after multiple attempts');
+                        }
+                    }
+                };
+
+                await attemptPlay();
+
+            } catch (error) {
+                console.error('TTS: API or setup error:', error);
+                document.getElementById('status-text').textContent = `TTS Error: ${error.message.substring(0, 100)}`;
+                stopCurrentAudioPlayback();
+                if (callback) {
+                    try {
+                        callback();
+                    } catch (callbackError) {
+                        console.error('TTS: Callback error:', callbackError);
+                    }
+                }
+            }
+        }
+
+        function startListening() {
+            if (!recognition || !useVoice || isPaused || isSpeaking || isListening) {
+                console.log(`STT: Not starting - useVoice: ${useVoice}, isPaused: ${isPaused}, isSpeaking: ${isSpeaking}, isListening: ${isListening}`);
+                if (isSpeaking) document.getElementById('status-text').textContent = 'Waiting for interviewer to finish...';
+                return;
+            }
+            
+            console.log('STT: Attempting to start listening.');
+            document.getElementById('status-text').textContent = '🎤 Listening... Speak clearly.';
+            accumulatedTranscript = document.getElementById('answer-input').value; // Preserve existing text
+            if (accumulatedTranscript && !accumulatedTranscript.endsWith(' ')) {
+                accumulatedTranscript += ' ';
+            }
+
+            clearTimeout(silenceTimer); // Clear any previous silence timer
+
+            try {
+                recognition.lang = document.getElementById('language').value;
+                isListening = true; // Set state before starting
+                recognition.start();
+            } catch (e) {
+                isListening = false; // Revert state on immediate failure
+                console.error('STT: Failed to start recognition:', e);
+                document.getElementById('status-text').textContent = 'Voice recognition could not start.';
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pause-btn');
+            if (isPaused) {
+                stopAllVoiceActivity(true); // Stop TTS and STT
+                if (frameAnalysisInterval) clearInterval(frameAnalysisInterval);
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+                document.getElementById('status-text').textContent = 'Interview Paused.';
+                console.log("Interview Paused");
+                // Timer automatically pauses when isPaused is true (handled in timer interval)
+            } else {
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                document.getElementById('status-text').textContent = ''; // Clear pause message
+                console.log("Interview Resumed");
+                // Timer automatically resumes when isPaused becomes false (handled in timer interval)
+                // If voice mode was active, and bot isn't about to speak, re-initiate listening.
+                // The typical flow is bot speaks then listens. If paused mid-listening,
+                // resuming should ideally continue listening for the current question.
+                if (useVoice && !isSpeaking) { // Don't start listening if bot was/is speaking
+                    // Check if a question is pending an answer.
+                    if (document.getElementById('question-section').style.display === 'block' &&
+                        !document.getElementById('summary-section').style.display === 'block') {
+                        startListening();
+                    }
+                }
+                if (useCamera && cameraStream) startFrameAnalysis();
+            }
+        }
+
+
+        async function startInterview() {
+            const resumeFile = document.getElementById('resume-file').files[0];
+            if (!resumeFile) { alert('Please upload resume.'); return; }
+            
+            // Reset all states
+            stopAllVoiceActivity(true);
+            isSpeaking = false;
+            isListening = false;
+            accumulatedTranscript = '';
+            
+            document.getElementById('start-section').style.display = 'none';
+            document.getElementById('question-section').style.display = 'block';
+            document.getElementById('reply-text').style.display = 'none';
+            document.getElementById('status-text').textContent = 'Initializing...';
+
+            useVoice = document.querySelector('input[name="mode"]:checked').value === 'voice';
+            useCamera = document.getElementById('enable-camera').checked;
+
+            const formData = new FormData();
+            formData.append('interview_track', document.getElementById('interview-track').value);
+            if (document.getElementById('sub-track-section').style.display === 'block') {
+                formData.append('sub_track', document.getElementById('sub-track').value);
+            }
+            formData.append('language', document.getElementById('language').value);
+            formData.append('mode', useVoice ? 'voice' : 'text');
+            formData.append('resume', resumeFile);
+            formData.append('use_camera', useCamera.toString());
+
+            // Handle camera setup
+            const videoElement = document.getElementById('camera-feed');
+            if (useCamera) {
+                try {
+                    // Check if we're on HTTPS or localhost (required for camera access)
+                    const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    if (!isSecure) {
+                        throw new Error('Camera access requires HTTPS. Please use HTTPS or localhost.');
+                    }
+
+                    // Check if mediaDevices is supported
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error('Camera access is not supported in this browser.');
+                    }
+
+                    document.getElementById('status-text').textContent = 'Requesting camera access...';
+                    
+                    // Request camera with specific constraints
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280, min: 640 },
+                            height: { ideal: 720, min: 480 },
+                            facingMode: 'user',
+                            frameRate: { ideal: 30, min: 15 }
+                        }, 
+                        audio: false 
+                    });
+                    
+                    videoElement.srcObject = cameraStream;
+                    videoElement.style.display = 'block';
+                    
+                    // Wait for video to be ready
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => {
+                            reject(new Error('Camera initialization timeout'));
+                        }, 10000); // 10 second timeout
+                        
+                        videoElement.onloadedmetadata = () => {
+                            clearTimeout(timeout);
+                            videoElement.play().then(resolve).catch(reject);
+                        };
+                        
+                        videoElement.onerror = () => {
+                            clearTimeout(timeout);
+                            reject(new Error('Video element error'));
+                        };
+                    });
+                    
+                    document.getElementById('status-text').textContent = 'Camera initialized successfully';
+                    
+                    // Capture initial frame for icebreaker
+                    const canvas = document.createElement('canvas');
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.filter = 'brightness(1.2)';
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convert to blob for better performance
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                    const formData = new FormData();
+                    formData.append('image', blob, 'initial_frame.jpg');
+                    
+                    // Send initial frame
+                    const initialFrameResponse = await fetch('/capture_initial_frame', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!initialFrameResponse.ok) {
+                        throw new Error('Failed to capture initial frame');
+                    }
+                    
+                    const initialFrameData = await initialFrameResponse.json();
+                    if (initialFrameData.error) {
+                        throw new Error(initialFrameData.error);
+                    }
+                    
+                    window.icebreakerQuestion = initialFrameData.icebreaker_question;
+                    
+                    if (!isPaused) {
+                        startFrameAnalysis();
+                    }
+                } catch (err) {
+                    console.error("Camera access error:", err);
+                    
+                    // Provide specific error messages for common issues
+                    let errorMessage = err.message;
+                    if (err.name === 'NotAllowedError') {
+                        errorMessage = 'Camera access denied. Please allow camera permissions and refresh the page.';
+                    } else if (err.name === 'NotFoundError') {
+                        errorMessage = 'No camera found. Please connect a camera and try again.';
+                    } else if (err.name === 'NotReadableError') {
+                        errorMessage = 'Camera is in use by another application. Please close other camera applications and try again.';
+                    } else if (err.name === 'OverconstrainedError') {
+                        errorMessage = 'Camera does not meet the required specifications. Please try with a different camera.';
+                    } else if (err.name === 'TypeError') {
+                        errorMessage = 'Camera access not supported. Please use a modern browser with camera support.';
+                    }
+                    
+                    alert("Camera access failed: " + errorMessage);
+                    const videoElement = document.getElementById('camera-feed');
+                    videoElement.style.display = 'none';
+                    useCamera = false;
+                    stopFrameAnalysis();
+                }
+            } else {
+                videoElement.style.display = 'none';
+                stopFrameAnalysis();
+            }
+
+            try {
+                const response = await fetch('/start_interview', { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                totalQuestions = data.total_questions;
+                questionNumber = data.question_number;
+
+                document.getElementById('progress-text').textContent = '';
+                document.getElementById('progress-fill').style.width = `${(questionNumber / totalQuestions) * 100}%`;
+                
+                // Always use icebreaker question first for resume-based interviews
+                const currentQuestion = window.icebreakerQuestion || data.current_question;
+                document.getElementById('question-text').textContent = currentQuestion;
+                
+                document.getElementById('answer-input').value = '';
+                document.getElementById('reply-text').textContent = '';
+                document.getElementById('reply-text').style.display = 'none';
+                document.getElementById('feedback-box').style.display = 'block';
+
+                document.getElementById('submit-btn').style.display = useVoice ? 'none' : 'inline-block';
+                document.getElementById('pause-btn').style.display = 'inline-block';
+                isPaused = false;
+
+                // Start the timer for the first question
+                startQuestionTimer();
+
+                if (useVoice) {
+                    const initialGreeting = questionNumber === 1 ? `Welcome! Here is your first question: ` : `Next question: `;
+                    await speakText(`${initialGreeting}${currentQuestion}`, () => {
+                        if (!isPaused) {
+                            startListening();
+                        }
+                    });
+                } else {
+                    document.getElementById('status-text').textContent = 'Please type your answer.';
+                }
+            } catch (error) {
+                console.error('Start interview failed:', error);
+                alert(`Failed to start: ${error.message}`);
+                document.getElementById('start-section').style.display = 'block';
+                document.getElementById('question-section').style.display = 'none';
+                document.getElementById('status-text').textContent = '';
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                    cameraStream = null;
+                }
+                stopFrameAnalysis();
+                stopAllVoiceActivity();
+            }
+        }
+        
+        async function submitAnswer() {
+            if (isSpeaking) {
+                console.log("Submit Answer: Blocked, AI is speaking.");
+                return;
+            }
+
+            // Check if interview is paused - don't submit if paused
+            if (isPaused) {
+                console.log("Submit Answer: Blocked, interview is paused.");
+                document.getElementById('status-text').textContent = 'Interview is paused. Please resume to submit your answer.';
+                return;
+            }
+
+            // Stop the current timer
+            stopQuestionTimer();
+
+            stopAllVoiceActivity(true);
+                                        
+            const answer = document.getElementById('answer-input').value.trim();
+            if (document.getElementById('status-text').textContent !== '🧠 Processing your answer...') {
+                document.getElementById('status-text').textContent = '🧠 Processing your answer...';
+            }
+            console.log("Submitting answer:", answer.substring(0,100));
+
+            const submitBtn = document.getElementById('submit-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            if (submitBtn) submitBtn.disabled = true;
+            if (pauseBtn) pauseBtn.disabled = true;
+
+            try {
+                const response = await fetch('/submit_answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        answer: answer || "",
+                        question_number: questionNumber,
+                        is_icebreaker: questionNumber === 1
+                    })
+                });
+                const data = await response.json();
+
+                if (submitBtn) submitBtn.disabled = false;
+                if (pauseBtn) pauseBtn.disabled = false;
+
+                totalQuestions = data.total_questions || totalQuestions;
+                questionNumber = data.question_number || questionNumber;
+
+                const replyTextDiv = document.getElementById('reply-text');
+                if(data.reply) {
+                    replyTextDiv.textContent = data.reply;
+                    replyTextDiv.style.display = 'block';
+                } else {
+                    replyTextDiv.style.display = 'none';
+                }
+                
+                document.getElementById('answer-input').value = '';
+                accumulatedTranscript = '';
+
+                if (data.finished) {
+                    stopAllVoiceActivity(true);
+                    document.getElementById('question-section').style.display = 'none';
+                    document.getElementById('summary-section').style.display = 'block';
+                    document.getElementById('status-text').textContent = 'Interview finished.';
+
+                    stopFrameAnalysis();
+                    if (cameraStream) {
+                        cameraStream.getTracks().forEach(track => track.stop());
+                        cameraStream = null;
+                    }
+
+                    const evaluationsDiv = document.getElementById('evaluations');
+                    evaluationsDiv.innerHTML = '';
+
+                    if (data.evaluations && Array.isArray(data.evaluations)) {
+                        data.evaluations.forEach((evalItem) => {
+                            const block = document.createElement('div');
+                            block.className = 'evaluation-block';
+
+                            block.innerHTML = `
+                                <p class="question"><strong>Q:</strong> ${evalItem.question}</p>
+                                <p><strong>Ans:</strong> ${evalItem.answer}</p>
+                                <p class="feedback">${evalItem.evaluation.replace('[AI Evaluation Complete] ', '')}</p>
+                                <p class="score"><strong>Score:</strong> ${evalItem.score}/10</p>
+                                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                                    <strong>Scoring Breakdown:</strong><br>
+                                    • Ideas (25%): Clarity and relevance of main points<br>
+                                    • Organization (25%): Logical flow and structure<br>
+                                    • Accuracy (25%): How well the question was addressed<br>
+                                    • Voice (15%): Uniqueness and personality<br>
+                                    • Grammar (5%): Language quality<br>
+                                    • Stop Words (5%): Filler word usage
+                                </p>
+
+                                <div class="feedback">
+                                    <label><strong>Your Feedback on this Question:</strong></label>
+                                    <textarea class="feedback-textarea" data-question="${evalItem.question}" placeholder="Share your thoughts about this question..."></textarea>
+                                </div>
+                            `;
+
+                            evaluationsDiv.appendChild(block);
+                        });
+                        await fetch('/submit_evaluations', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ evaluations: data.evaluations })
+                        });
+                    }
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit All Feedback';
+                    submitBtn.className = 'btn-outline';
+                    submitBtn.onclick = submitAllFeedback;
+
+                    evaluationsDiv.appendChild(submitBtn);
+
+                    if (data.visual_score_details) {
+                        const visualBlock = document.createElement('div');
+                        visualBlock.className = 'evaluation-block';
+                        const score = data.visual_score_details.score || 0;
+                        const feedback = data.visual_score_details.feedback || 'No visual feedback available';
+                        visualBlock.innerHTML = `
+                            <h4>Visual Cues Analysis</h4>
+                            <p class="score"><strong>Score:</strong> ${score}/10</p>
+                            <p class="feedback"><strong>Feedback:</strong> ${feedback}</p>`;
+                        evaluationsDiv.appendChild(visualBlock);
+                    }
+
+                    const overallScoreDiv = document.getElementById('overall-score');
+                    overallScoreDiv.innerHTML = `
+                        <h3>Overall Score: ${data.overall_score}/100</h3>
+                        <p>Weightage: Q&A: 90%, Visuals: 10%</p>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            <strong>How Your Score is Calculated:</strong><br>
+                            • Each question is scored on 6 criteria (Ideas, Organization, Accuracy, Voice, Grammar, Stop Words)<br>
+                            • Individual question scores are averaged and weighted at 90% of total<br>
+                            • Visual analysis (eye contact, confidence) contributes 10%<br>
+                            • Bonus points are awarded for detailed answers with specific examples
+                        </p>`;
+                    if (data.status) { 
+                        const statusP = document.createElement('p');
+                        statusP.style.textAlign = 'center';
+                        statusP.style.color = 'red';
+                        statusP.style.fontWeight = 'bold';
+                        statusP.style.fontSize = '1.2em';
+                        statusP.style.marginTop = '10px';
+                        statusP.textContent = data.status.toUpperCase();
+                        overallScoreDiv.prepend(statusP); 
+                    }
+
+                    if (useVoice) {
+                        let endMessage = `The interview is complete. Your overall score is ${data.overall_score} out of 100.`;
+                        if (data.status && data.status.toLowerCase().includes("disqualified")) {
+                            endMessage = `The interview has been stopped. Your overall score is ${data.overall_score} out of 100.`;
+                        }
+                        await speakText(endMessage, null);
+                    }
+
+                } else if (data.current_question) {
+                    document.getElementById('progress-text').textContent = '';
+                    document.getElementById('progress-fill').style.width = `${(questionNumber / totalQuestions) * 100}%`;
+                    document.getElementById('question-text').textContent = data.current_question;
+                    document.getElementById('feedback-box').style.display = 'block';
+
+                    // Start timer for the next question
+                    startQuestionTimer();
+
+                    if (useVoice) {
+                        const reply = data.reply || 'Okay.';
+                        const nextQuestion = data.current_question;
+                        const isFollowUp = data.is_follow_up;
+                        const questionPrefix = isFollowUp ? 'Follow-up question: ' : 'Next question: ';
+                        
+                        try {
+                            await speakText(`${reply} ${questionPrefix}${nextQuestion}`, () => {
+                                if (!isPaused) {
+                                    startListening();
+                                }
+                            });
+                        } catch (speakError) {
+                            console.error('TTS error in submitAnswer:', speakError);
+                            document.getElementById('status-text').textContent = 'Error with voice mode. Please continue in text mode.';
+                            useVoice = false;
+                            document.getElementById('submit-btn').style.display = 'inline-block';
+                        }
+                    } else {
+                        document.getElementById('status-text').textContent = 'Please type your answer.';
+                    }
+                } else {
+                    console.error("Submit Answer: No 'finished' flag and no 'next_question'. Interview might be stuck.");
+                    document.getElementById('status-text').textContent = 'Error: Received unclear next step from server.';
+                }
+
+            } catch (error) {
+                console.error('Submit answer error:', error);
+                document.getElementById('status-text').textContent = 'Error submitting answer. Please try again.';
+                if (submitBtn) submitBtn.disabled = false;
+                if (pauseBtn) pauseBtn.disabled = false;
+            }
+        }
+
+        // --- Unchanged helper functions ---
+        async function captureAndSendSnapshot(snapshotIndex) {
+            if (!useCamera || !cameraStream || isPaused) return;
+            const videoElement = document.getElementById('camera-feed');
+            if (!videoElement.srcObject || videoElement.readyState < videoElement.HAVE_ENOUGH_DATA || videoElement.videoWidth === 0) {
+                console.warn("Snapshot: Video element not ready.");
+                return;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            try {
+                const response = await fetch('/capture_snapshot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_data_url: imageDataUrl })
+                });
+                const result = await response.json();
+                const currentStatus = document.getElementById('status-text').textContent;
+                if (response.ok) {
+                    document.getElementById('status-text').textContent = `📸 Snapshot ${snapshotIndex + 1} captured.`;
+                    setTimeout(() => { // Revert status if it was snapshot message
+                        if(document.getElementById('status-text').textContent.startsWith('📸 Snapshot')) {
+                           document.getElementById('status-text').textContent = (isListening ? '🎤 Listening... Speak clearly.' : (isSpeaking ? 'Interviewer is speaking...' : ''));
+                        }
+                    }, 2000);
+                } else {
+                    console.error('Snapshot failed:', result.error);
+                    document.getElementById('status-text').textContent = '📷 Snapshot failed.';
+                     setTimeout(() => { // Revert status
+                        if(document.getElementById('status-text').textContent === '📷 Snapshot failed.') {
+                           document.getElementById('status-text').textContent = currentStatus;
+                        }
+                    }, 2000);
+                }
+            } catch (error) {
+                const currentStatus = document.getElementById('status-text').textContent;
+                console.error('Snapshot error:', error);
+                document.getElementById('status-text').textContent = '📷 Snapshot error.';
+                setTimeout(() => { // Revert status
+                    if(document.getElementById('status-text').textContent === '📷 Snapshot error.') {
+                       document.getElementById('status-text').textContent = currentStatus;
+                    }
+                }, 2000);
+            }
+        }
+
+        function toggleSubTrack() {
+            const track = document.getElementById('interview-track').value;
+            const subTrackSection = document.getElementById('sub-track-section');
+            const subTrackSelect = document.getElementById('sub-track');
+            subTrackSelect.innerHTML = '';
+            let options = [];
+            if (track === 'school_based') {
+                options = [ { value: 'IIM', text: 'IIM' }, { value: 'ISB', text: 'ISB' }, { value: 'Other', text: 'Other B-Schools' }];
+            } else if (track === 'interest_areas') {
+                options = [ { value: 'General Business', text: 'General Business & Leadership' }, { value: 'Finance', text: 'Finance & Economics' }, { value: 'Marketing', text: 'Marketing & Strategy' }, { value: 'Operations', text: 'Operations & Supply Chain' }];
+            } else if (track === 'bank_type') {
+                options = [ { value: 'Public Sector Banks', text: 'Public Sector Banks' }, { value: 'Private Banks', text: 'Private Banks' }, { value: 'Regulatory Roles', text: 'Regulatory Roles' }];
+            } else if (track === 'technical_analytical') {
+                options = [ { value: 'Banking Knowledge', text: 'Banking Knowledge' }, { value: 'Logical Reasoning', text: 'Logical Reasoning' }, { value: 'Situational Judgement', text: 'Situational Judgement' }, { value: 'Current Affairs', text: 'Current Affairs' }];
+            }
+            if (options.length > 0) {
+                subTrackSection.style.display = 'block';
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value; option.textContent = opt.text;
+                    subTrackSelect.appendChild(option);
+                });
+            } else {
+                subTrackSection.style.display = 'none';
+            }
+        }
+
+
+        async function submitFeedback() {
+    const feedback = document.getElementById('feedback-input').value.trim();
+    const questionText = document.getElementById('question-text').textContent;
+
+    if (!feedback) {
+        alert("Please enter feedback before submitting.");
+        return;
+    }
+
+    try {
+        const response = await fetch('/submit_feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: questionText, feedback: feedback })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Thank you for your feedback!");
+            document.getElementById('feedback-input').value = "";
+            document.getElementById('feedback-box').style.display = 'none';
+        } else {
+            alert("Error submitting feedback: " + result.error);
+        }
+    } catch (error) {
+        console.error("Feedback submission failed:", error);
+        alert("An error occurred while submitting feedback.");
+    }
+}
+
+async function submitAllFeedback() {
+    const feedbackEntries = [];
+
+    document.querySelectorAll('.feedback-textarea').forEach(textarea => {
+        const feedbackText = textarea.value.trim();
+        if (feedbackText) {
+            feedbackEntries.push({
+                question: textarea.dataset.question,
+                feedback: feedbackText
+            });
+        }
+    });
+
+    if (feedbackEntries.length === 0) {
+        alert("Please enter at least one feedback comment.");
+        return;
+    }
+
+    try {
+        const response = await fetch('/submit_bulk_feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entries: feedbackEntries })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Thank you! Your feedback has been submitted.");
+        } else {
+            alert("Submission failed: " + result.error);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error submitting feedback.");
+    }
+}
+
+
+        function initializeApp(allowedUserType) {
+            document.getElementById('app-title').textContent = allowedUserType === 'MBA' ? 'HR Interviewer (MBA)' : 'Banking Interviewer';
+            const interviewTrackSelect = document.getElementById('interview-track');
+            interviewTrackSelect.innerHTML = '';
+            let mainTracks = [];
+            if (allowedUserType === 'MBA') {
+                mainTracks = [ { value: 'resume', text: 'Resume-based' }, { value: 'school_based', text: 'School Based' }, { value: 'interest_areas', text: 'Interest Areas' }];
+            } else { // Banking
+                mainTracks = [ { value: 'resume', text: 'Resume-based' }, { value: 'bank_type', text: 'Bank Type' }, { value: 'technical_analytical', text: 'Technical & Analytical' }];
+            }
+            mainTracks.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value; option.textContent = opt.text;
+                interviewTrackSelect.appendChild(option);
+            });
+            toggleSubTrack(); // Initialize sub-tracks based on default main track
+        }
+
+         document.addEventListener('DOMContentLoaded', () => {
+            setupSpeechRecognition();
+            const allowed = sessionStorage.getItem('allowed');
+            if (allowed) {
+                initializeApp(allowed);
+            } else {
+                 // For local testing, you might default to one:
+                 // initializeApp('MBA'); // or 'Banking'
+                 // In production, redirect:
+                 window.location.href = '/login.html'; 
+            }
+        });
+
+        // Timer Functions
+        function startQuestionTimer() {
+            timeRemaining = 120; // Reset to 2 minutes
+            document.getElementById('timer-container').style.display = 'block';
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        // Auto-submit when time runs out
+                        if (document.getElementById('answer-input').value.trim()) {
+                            submitAnswer();
+                        } else {
+                            // If no answer provided, show warning and give 10 more seconds
+                            timeRemaining = 10;
+                            document.getElementById('status-text').textContent = '⚠️ Time is up! Please submit your answer within 10 seconds.';
+                            timerInterval = setInterval(() => {
+                                timeRemaining--;
+                                updateTimerDisplay();
+                                if (timeRemaining <= 0) {
+                                    clearInterval(timerInterval);
+                                    timerInterval = null;
+                                    submitAnswer();
+                                }
+                            }, 1000);
+                        }
+                    }
+                }
+            }, 1000);
+        }
+        
+        function stopQuestionTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('timer-container').style.display = 'none';
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timerText = document.getElementById('timer-text');
+            const timerDisplay = document.querySelector('.timer-display');
+            
+            timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update styling based on time remaining
+            timerDisplay.classList.remove('timer-warning', 'timer-critical');
+            if (timeRemaining <= 30 && timeRemaining > 10) {
+                timerDisplay.classList.add('timer-warning');
+            } else if (timeRemaining <= 10) {
+                timerDisplay.classList.add('timer-critical');
+            }
+        }
+        
+        function pauseTimer() {
+            // Timer is already paused when isPaused is true
+            // This function is called from togglePause
+        }
+        
+        function resumeTimer() {
+            // Timer automatically resumes when isPaused becomes false
+            // This function is called from togglePause
+        }
+        
+        function stopCurrentAudioPlayback() {
+            if (currentAudio) {
+                try {
+                    currentAudio.pause();
+                    currentAudio.onended = null;
+                    currentAudio.onerror = null;
+                    if (currentAudio.src && currentAudio.src.startsWith('blob:')) {
+                        URL.revokeObjectURL(currentAudio.src);
+                    }
+                    currentAudio.src = '';
+                    currentAudio.load();
+                } catch (e) {
+                    console.error('Error stopping audio:', e);
+                } finally {
+                    currentAudio = null;
+                    isSpeaking = false;
+                }
+            }
+        }
+
+        async function captureAndSendFrame() {
+            if (!useCamera || !cameraStream || isPaused || document.hidden) return;
+            
+            const videoElement = document.getElementById('camera-feed');
+            if (!videoElement.srcObject || videoElement.readyState < videoElement.HAVE_ENOUGH_DATA || videoElement.videoWidth === 0) {
+                console.warn('Frame capture: Video not ready');
+                return;
+            }
+
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Apply brightness adjustment
+                ctx.filter = 'brightness(1.2)';
+                ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                
+                // Convert to blob for better performance
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                const formData = new FormData();
+                formData.append('image', blob, 'frame.jpg');
+                
+                const response = await fetch('/analyze_visuals', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Frame analysis failed: ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (result.error) {
+                    console.warn('Frame analysis warning:', result.error);
+                }
+            } catch (error) {
+                console.warn('Frame send error:', error.message);
+            }
+        }
+
+        function startFrameAnalysis() {
+            if (useCamera && cameraStream && !frameAnalysisInterval && !isPaused) {
+                // Send first frame immediately
+                captureAndSendFrame();
+                // Then set up interval
+                frameAnalysisInterval = setInterval(captureAndSendFrame, 5000);
+                console.log('Frame analysis started');
+            }
+        }
+
+        function stopFrameAnalysis() {
+            if (frameAnalysisInterval) {
+                clearInterval(frameAnalysisInterval);
+                frameAnalysisInterval = null;
+                console.log('Frame analysis stopped');
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopFrameAnalysis();
+            } else {
+                if (useCamera && cameraStream && !isPaused && document.getElementById('question-section').style.display === 'block') {
+                    startFrameAnalysis();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

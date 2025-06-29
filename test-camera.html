@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Test - AI Interviewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+        .checklist li.fail:before {
+            content: "✗ ";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Camera Functionality Test</h1>
+        <p>This page tests camera functionality for the AI Interviewer application.</p>
+        
+        <div id="status-container"></div>
+        
+        <div class="test-section">
+            <h3>1. Environment Check</h3>
+            <ul id="environment-checklist" class="checklist"></ul>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Camera Access Test</h3>
+            <button id="test-camera-btn" onclick="testCamera()">Test Camera Access</button>
+            <button id="stop-camera-btn" onclick="stopCamera()" disabled>Stop Camera</button>
+            <video id="test-video" autoplay playsinline muted style="display: none;"></video>
+            <div id="camera-status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. API Connection Test</h3>
+            <button onclick="testAPI()">Test API Connection</button>
+            <div id="api-status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Security Headers Test</h3>
+            <button onclick="testSecurityHeaders()">Test Security Headers</button>
+            <div id="security-status"></div>
+        </div>
+    </div>
+
+    <script>
+        let cameraStream = null;
+        
+        function addStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+        }
+        
+        function updateChecklist(id, text, passed = true) {
+            const list = document.getElementById(id);
+            const li = document.createElement('li');
+            li.textContent = text;
+            if (!passed) li.classList.add('fail');
+            list.appendChild(li);
+        }
+        
+        // Environment check
+        function checkEnvironment() {
+            const checklist = document.getElementById('environment-checklist');
+            checklist.innerHTML = '';
+            
+            // Check HTTPS
+            const isSecure = window.location.protocol === 'https:' || 
+                           window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
+            updateChecklist('environment-checklist', `HTTPS/Localhost: ${isSecure ? 'Yes' : 'No'}`, isSecure);
+            
+            // Check getUserMedia support
+            const hasGetUserMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+            updateChecklist('environment-checklist', `getUserMedia Support: ${hasGetUserMedia ? 'Yes' : 'No'}`, hasGetUserMedia);
+            
+            // Check WebRTC support
+            const hasWebRTC = !!(window.RTCPeerConnection || window.webkitRTCPeerConnection);
+            updateChecklist('environment-checklist', `WebRTC Support: ${hasWebRTC ? 'Yes' : 'No'}`, hasWebRTC);
+            
+            // Check modern browser
+            const isModernBrowser = !!(window.Promise && window.fetch && window.URL.createObjectURL);
+            updateChecklist('environment-checklist', `Modern Browser: ${isModernBrowser ? 'Yes' : 'No'}`, isModernBrowser);
+            
+            if (!isSecure) {
+                addStatus('⚠️ Camera access requires HTTPS or localhost. Please use HTTPS in production.', 'warning');
+            }
+            
+            if (!hasGetUserMedia) {
+                addStatus('❌ Camera access is not supported in this browser.', 'error');
+            }
+        }
+        
+        // Camera test
+        async function testCamera() {
+            const btn = document.getElementById('test-camera-btn');
+            const stopBtn = document.getElementById('stop-camera-btn');
+            const video = document.getElementById('test-video');
+            const status = document.getElementById('camera-status');
+            
+            btn.disabled = true;
+            status.innerHTML = '';
+            
+            try {
+                addStatus('🎥 Requesting camera access...', 'info');
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 1280, min: 640 },
+                        height: { ideal: 720, min: 480 },
+                        facingMode: 'user'
+                    },
+                    audio: false
+                });
+                
+                video.srcObject = cameraStream;
+                video.style.display = 'block';
+                
+                await new Promise((resolve, reject) => {
+                    video.onloadedmetadata = resolve;
+                    video.onerror = reject;
+                    setTimeout(reject, 10000); // 10 second timeout
+                });
+                
+                await video.play();
+                
+                addStatus('✅ Camera access successful!', 'success');
+                status.innerHTML = `
+                    <div class="status success">
+                        <strong>Camera Test Passed!</strong><br>
+                        Resolution: ${video.videoWidth}x${video.videoHeight}<br>
+                        Frame Rate: Available<br>
+                        Camera: ${cameraStream.getVideoTracks()[0].label || 'Unknown'}
+                    </div>
+                `;
+                
+                stopBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('Camera test failed:', error);
+                let errorMessage = error.message;
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage = 'Camera access denied. Please allow camera permissions.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage = 'No camera found. Please connect a camera.';
+                } else if (error.name === 'NotReadableError') {
+                    errorMessage = 'Camera is in use by another application.';
+                }
+                
+                addStatus(`❌ Camera test failed: ${errorMessage}`, 'error');
+                status.innerHTML = `
+                    <div class="status error">
+                        <strong>Camera Test Failed</strong><br>
+                        Error: ${errorMessage}<br>
+                        Name: ${error.name}
+                    </div>
+                `;
+            }
+            
+            btn.disabled = false;
+        }
+        
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            const video = document.getElementById('test-video');
+            video.style.display = 'none';
+            video.srcObject = null;
+            
+            document.getElementById('test-camera-btn').disabled = false;
+            document.getElementById('stop-camera-btn').disabled = true;
+            document.getElementById('camera-status').innerHTML = '';
+            
+            addStatus('🛑 Camera stopped', 'info');
+        }
+        
+        // API test
+        async function testAPI() {
+            const status = document.getElementById('api-status');
+            status.innerHTML = '';
+            
+            try {
+                addStatus('🔗 Testing API connection...', 'info');
+                
+                const response = await fetch('/health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addStatus('✅ API connection successful!', 'success');
+                    status.innerHTML = `
+                        <div class="status success">
+                            <strong>API Test Passed!</strong><br>
+                            Status: ${data.status}<br>
+                            OpenAI Client: ${data.openai_client ? 'Available' : 'Not Available'}<br>
+                            Camera Support: ${data.camera_support ? 'Available' : 'Not Available'}<br>
+                            Version: ${data.version}
+                        </div>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+            } catch (error) {
+                console.error('API test failed:', error);
+                addStatus(`❌ API test failed: ${error.message}`, 'error');
+                status.innerHTML = `
+                    <div class="status error">
+                        <strong>API Test Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Security headers test
+        async function testSecurityHeaders() {
+            const status = document.getElementById('security-status');
+            status.innerHTML = '';
+            
+            try {
+                addStatus('🔒 Testing security headers...', 'info');
+                
+                const response = await fetch('/health');
+                const headers = response.headers;
+                
+                const requiredHeaders = [
+                    'Content-Security-Policy',
+                    'X-Content-Type-Options',
+                    'X-Frame-Options',
+                    'X-XSS-Protection'
+                ];
+                
+                const missingHeaders = requiredHeaders.filter(header => !headers.get(header));
+                
+                if (missingHeaders.length === 0) {
+                    addStatus('✅ Security headers are properly configured!', 'success');
+                    status.innerHTML = `
+                        <div class="status success">
+                            <strong>Security Headers Test Passed!</strong><br>
+                            All required security headers are present.
+                        </div>
+                    `;
+                } else {
+                    addStatus(`⚠️ Missing security headers: ${missingHeaders.join(', ')}`, 'warning');
+                    status.innerHTML = `
+                        <div class="status warning">
+                            <strong>Security Headers Test Warning</strong><br>
+                            Missing headers: ${missingHeaders.join(', ')}
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Security headers test failed:', error);
+                addStatus(`❌ Security headers test failed: ${error.message}`, 'error');
+                status.innerHTML = `
+                    <div class="status error">
+                        <strong>Security Headers Test Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            addStatus('🚀 Camera test page loaded. Running environment check...', 'info');
+            checkEnvironment();
+        });
+    </script>
+</body>
+</html> 
