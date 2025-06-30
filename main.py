@@ -733,61 +733,62 @@ Candidate's Answer: {answer_text}
         logging.error(f"AI Scoring: Exception: {e_ai_score}", exc_info=True); return fallback_ai_evaluation(question_text, answer_text)
 
 def generate_next_question(prev_q_text, prev_ans_text, prev_score, interview_track_context, job_type_context, asked_qs_normalized_set_global, attempt_num=1):
-    if attempt_num > 2: 
-        logging.info("Follow-up Gen: Max attempts reached. No follow-up question will be generated.")
-        return None
-    
-    # First try OpenAI
-    if client:
-        try:
-            focus_map = {
-                'resume': 'candidate specific experiences, skills, or career goals mentioned in their resume or previous answer',
-                'school_based': 'their academic motivations, reasons for choosing a particular school, or how their studies relate to career goals',
-                'interest_areas': 'their passion for the chosen interest area, depth of knowledge, or practical application of their interests',
-                'bank_type': 'their understanding of the specific bank type, customer service approaches, or relevant operational aspects',
-                'technical_analytical': 'their technical banking knowledge, problem-solving abilities, or logical reasoning based on the previous answer'
-            }
-            focus_guidance = focus_map.get(interview_track_context, 'general relevance, impact, or lessons learned from their previous answer')
-            
-            prompt_fu = (
-                f"You are an interviewer for a {job_type_context} candidate. They just answered a question. "
-                f"Previous Question: \"{prev_q_text}\"\nCandidate's Answer: \"{prev_ans_text}\"\nThis answer was scored {prev_score}/10.\n"
-                f"Based on this, generate ONE insightful follow-up question that delves deeper into their response, focusing on {focus_guidance}. "
-                f"The follow-up should be natural, concise, a complete sentence, and end with a question mark. "
-                f"Do NOT repeat the previous question or ask something generic if a specific follow-up is possible. "
-                f"Avoid questions similar to these already considered (normalized sample): {list(asked_qs_normalized_set_global)[:3]}. Follow-up Question:"
-            )
-            
-            fu_resp_text = get_openai_response_generic([{"role": "user", "content": prompt_fu}], max_tokens=110, temperature=0.6)
-            
-            if "Error" not in fu_resp_text and "OpenAI client not available" not in fu_resp_text:
-                fu_q_candidate = strip_numbering(fu_resp_text.strip())
-                if not fu_q_candidate.endswith('?'): 
-                    fu_q_candidate += '?'
+    # If the answer is too short, skip OpenAI and use fallback questions.
+    if len(prev_ans_text.split()) < 3:
+        logging.info("Follow-up Gen: Answer too short. Using fallback question from PDF/resume.")
+    else:
+        # If answer is substantive, try OpenAI for a contextual follow-up.
+        if attempt_num > 2: 
+            logging.info("Follow-up Gen: Max attempts reached. No follow-up question will be generated.")
+            return None
+        
+        if client:
+            try:
+                focus_map = {
+                    'resume': 'candidate specific experiences, skills, or career goals mentioned in their resume or previous answer',
+                    'school_based': 'their academic motivations, reasons for choosing a particular school, or how their studies relate to career goals',
+                    'interest_areas': 'their passion for the chosen interest area, depth of knowledge, or practical application of their interests',
+                    'bank_type': 'their understanding of the specific bank type, customer service approaches, or relevant operational aspects',
+                    'technical_analytical': 'their technical banking knowledge, problem-solving abilities, or logical reasoning based on the previous answer'
+                }
+                focus_guidance = focus_map.get(interview_track_context, 'general relevance, impact, or lessons learned from their previous answer')
                 
-                # Validate the generated question
-                if 3 <= len(fu_q_candidate.split()) <= 30:
-                    norm_fu_q_candidate = normalize_text(fu_q_candidate)
-                    if norm_fu_q_candidate not in asked_qs_normalized_set_global:
-                        logging.info(f"Follow-up Gen: Generated question from OpenAI: {fu_q_candidate}")
-                        return fu_q_candidate
+                prompt_fu = (
+                    f"You are an interviewer for a {job_type_context} candidate. They just answered a question. "
+                    f"Previous Question: \"{prev_q_text}\"\nCandidate's Answer: \"{prev_ans_text}\"\nThis answer was scored {prev_score}/10.\n"
+                    f"Based on this, generate ONE insightful follow-up question that delves deeper into their response, focusing on {focus_guidance}. "
+                    f"The follow-up should be natural, concise, a complete sentence, and end with a question mark. "
+                    f"Do NOT repeat the previous question or ask something generic if a specific follow-up is possible. "
+                    f"Avoid questions similar to these already considered (normalized sample): {list(asked_qs_normalized_set_global)[:3]}. Follow-up Question:"
+                )
+                
+                fu_resp_text = get_openai_response_generic([{"role": "user", "content": prompt_fu}], max_tokens=110, temperature=0.6)
+                
+                if "Error" not in fu_resp_text and "OpenAI client not available" not in fu_resp_text:
+                    fu_q_candidate = strip_numbering(fu_resp_text.strip())
+                    if not fu_q_candidate.endswith('?'): 
+                        fu_q_candidate += '?'
+                    
+                    if 3 <= len(fu_q_candidate.split()) <= 30:
+                        norm_fu_q_candidate = normalize_text(fu_q_candidate)
+                        if norm_fu_q_candidate not in asked_qs_normalized_set_global:
+                            logging.info(f"Follow-up Gen: Generated question from OpenAI: {fu_q_candidate}")
+                            return fu_q_candidate
+                        else:
+                            logging.info(f"Follow-up Gen: Generated question already asked, retrying...")
+                            if attempt_num < 2:
+                                return generate_next_question(prev_q_text, prev_ans_text, prev_score, interview_track_context, job_type_context, asked_qs_normalized_set_global, attempt_num + 1)
                     else:
-                        logging.info(f"Follow-up Gen: Generated question already asked, retrying...")
+                        logging.info(f"Follow-up Gen: Generated question failed validation, retrying...")
                         if attempt_num < 2:
                             return generate_next_question(prev_q_text, prev_ans_text, prev_score, interview_track_context, job_type_context, asked_qs_normalized_set_global, attempt_num + 1)
                 else:
-                    logging.info(f"Follow-up Gen: Generated question failed validation, retrying...")
-                    if attempt_num < 2:
-                        return generate_next_question(prev_q_text, prev_ans_text, prev_score, interview_track_context, job_type_context, asked_qs_normalized_set_global, attempt_num + 1)
-            else:
-                logging.warning(f"Follow-up Gen: OpenAI failed: {fu_resp_text}")
-                # Fall through to PDF fallback
-                
-        except Exception as e:
-            logging.error(f"Follow-up Gen: Exception with OpenAI: {e}")
-            # Fall through to PDF fallback
-    
-    # Fallback to PDF questions
+                    logging.warning(f"Follow-up Gen: OpenAI failed: {fu_resp_text}")
+                    
+            except Exception as e:
+                logging.error(f"Follow-up Gen: Exception with OpenAI: {e}")
+
+    # Fallback to PDF questions if OpenAI fails or is skipped.
     logging.info("Follow-up Gen: Using fallback questions from PDF")
     try:
         # Get relevant questions from PDF based on track
@@ -951,19 +952,37 @@ def calculate_visual_score():
     if not visual_analyses: return 0.0, "No visual data was captured for scoring."
     try:
         num_samples_va = len(visual_analyses)
+        
+        # Eye contact (face detected) component
         ec_frames = sum(1 for item in visual_analyses if item.get('face_detected', False))
-        avg_conf_va = sum(item.get('confidence', 1.0) for item in visual_analyses) / num_samples_va
-        pos_emo_frames = sum(1 for item in visual_analyses if 'positive' in item.get('emotion', ''))
         ec_ratio_va = ec_frames / num_samples_va
-        conf_norm_va = min(max(avg_conf_va, 0), 10) / 10.0
-        pos_emo_ratio_va = pos_emo_frames / num_samples_va
-        w_ec, w_conf, w_emo = 0.45, 0.35, 0.20
-        score_ec_comp = ec_ratio_va * 10; score_conf_comp = conf_norm_va * 10; score_emo_comp = pos_emo_ratio_va * 10
-        final_visual_score_val = (score_ec_comp * w_ec) + (score_conf_comp * w_conf) + (score_emo_comp * w_emo)
-        feedback_text_va = (f"Estimated eye contact maintained approximately {round(ec_ratio_va*100)}% of samples. "
-                            f"Average perceived confidence: {round(avg_conf_va,1)}/10. "
-                            f"Positive emotion cues observed in approximately {round(pos_emo_ratio_va*100)}% of samples.")
+        score_ec_comp = ec_ratio_va * 10
+        
+        # Visual clarity (confidence) component based on brightness and contrast
+        avg_brightness = sum(item.get('brightness', 0) for item in visual_analyses) / num_samples_va
+        avg_contrast = sum(item.get('contrast', 0) for item in visual_analyses) / num_samples_va
+        
+        # Score brightness (ideal: 100-180)
+        brightness_score = 10.0 if 100 <= avg_brightness <= 180 else max(0, 10 - abs(avg_brightness - 140) / 15)
+        
+        # Score contrast (ideal: > 50)
+        contrast_score = 10.0 if avg_contrast >= 50 else max(0, avg_contrast / 5)
+        
+        # Combine into a "visual clarity" score
+        clarity_score = (brightness_score + contrast_score) / 2
+        
+        # Weights for final score
+        w_ec = 0.60  # 60% for eye contact
+        w_clarity = 0.40  # 40% for visual clarity
+        
+        final_visual_score_val = (score_ec_comp * w_ec) + (clarity_score * w_clarity)
+        
+        feedback_text_va = (f"Estimated face presence was maintained in {round(ec_ratio_va*100)}% of samples. "
+                            f"Average video brightness was {round(avg_brightness)} and contrast was {round(avg_contrast)}, "
+                            f"resulting in a visual clarity score of {round(clarity_score, 1)}/10.")
+                            
         return round(final_visual_score_val, 1), feedback_text_va
+        
     except ZeroDivisionError: 
         logging.warning("Calculate Visual Score: Division by zero.")
         return 0.0, "Not enough visual data."
