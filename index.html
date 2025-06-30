@@ -572,6 +572,16 @@
                         Enable Camera for Visual Analysis & Snapshots
                     </label>
                 </div>
+                <div style="margin-top: 15px;">
+                    <button type="button" onclick="checkCamera()" class="btn-outline" style="padding: 8px 15px; font-size: 0.9rem;">
+                        <i class="fas fa-video"></i> Test Camera
+                    </button>
+                </div>
+                <div id="camera-check-status" class="status-text" style="min-height: 1.2em; margin-top: 10px;"></div>
+                <div id="camera-selection" style="display: none; margin-top: 10px;">
+                    <label for="camera-select">Select available camera:</label>
+                    <select id="camera-select" style="width: 100%;"></select>
+                </div>
             </div>
 
             <button onclick="startInterview()" class="pulse">
@@ -1028,13 +1038,21 @@
                     document.getElementById('status-text').textContent = 'Requesting camera access...';
                     
                     // Request camera with specific constraints
+                    const selectedCameraId = document.getElementById('camera-select').value;
+                    const videoConstraints = {
+                        width: { ideal: 1280, min: 640 },
+                        height: { ideal: 720, min: 480 },
+                        facingMode: 'user',
+                        frameRate: { ideal: 30, min: 15 }
+                    };
+
+                    if (selectedCameraId) {
+                        videoConstraints.deviceId = { exact: selectedCameraId };
+                        delete videoConstraints.facingMode;
+                    }
+                    
                     cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { 
-                            width: { ideal: 1280, min: 640 },
-                            height: { ideal: 720, min: 480 },
-                            facingMode: 'user',
-                            frameRate: { ideal: 30, min: 15 }
-                        }, 
+                        video: videoConstraints, 
                         audio: false 
                     });
                     
@@ -1709,6 +1727,56 @@ async function submitAllFeedback() {
                 }
             }
         });
+
+        async function checkCamera() {
+            const statusDiv = document.getElementById('camera-check-status');
+            const selectionDiv = document.getElementById('camera-selection');
+            const cameraSelect = document.getElementById('camera-select');
+
+            statusDiv.textContent = 'Checking for cameras...';
+            cameraSelect.innerHTML = '';
+            selectionDiv.style.display = 'none';
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                statusDiv.textContent = 'Camera detection is not supported by this browser.';
+                return;
+            }
+
+            try {
+                // Get permissions first by requesting a temporary stream
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                // Stop the tracks immediately, we just needed permission
+                stream.getTracks().forEach(track => track.stop());
+
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                if (videoDevices.length === 0) {
+                    statusDiv.textContent = 'No camera found. Please connect a camera and try again.';
+                } else {
+                    statusDiv.textContent = `Found ${videoDevices.length} camera(s). Please select one.`;
+                    
+                    videoDevices.forEach((device, index) => {
+                        const option = document.createElement('option');
+                        option.value = device.deviceId;
+                        option.textContent = device.label || `Camera ${index + 1}`;
+                        cameraSelect.appendChild(option);
+                    });
+                    
+                    selectionDiv.style.display = 'block';
+                    document.getElementById('enable-camera').checked = true; // Enable camera if found
+                }
+            } catch (err) {
+                console.error('Camera check error:', err);
+                if (err.name === 'NotAllowedError') {
+                    statusDiv.textContent = 'Camera access denied. Please grant permission in your browser settings.';
+                } else if (err.name === 'NotFoundError') {
+                    statusDiv.textContent = 'No camera found. Make sure it is connected and not in use.';
+                } else {
+                    statusDiv.textContent = `Error accessing camera: ${err.name}`;
+                }
+            }
+        }
     </script>
 </body>
 </html>
