@@ -616,8 +616,8 @@
                 <div id="feedback-box" class="feedback" style="display: none;">
                     <label for="feedback-input"><strong>Your Feedback on this Question:</strong></label>
                     <textarea id="feedback-input" placeholder="Share your thoughts about this question..."></textarea>
-                    <button onclick="submitFeedback()" class="btn-outline">
-                           <i class="fas fa-comment-dots"></i> Submit Feedback
+                    <button onclick="submitFeedback(this)" class="btn-outline">
+                        <i class="fas fa-comment-dots"></i> Submit Feedback
                     </button>
                 </div>
 
@@ -632,7 +632,7 @@
                 <div id="feedback-box" class="feedback">
     <label for="feedback-input"><strong>Your Feedback about the Interview Experience:</strong></label>
     <textarea id="feedback-input" placeholder="We value your input..."></textarea>
-    <button onclick="submitFeedback()" class="btn-outline">
+    <button onclick="submitFeedback(this)" class="btn-outline">
         <i class="fas fa-comment-dots"></i> Submit Feedback
     </button>
 </div>
@@ -934,8 +934,8 @@
         }
 
         function startListening() {
-            if (!recognition || !useVoice || isPaused || isSpeaking || isListening) {
-                console.log(`STT: Not starting - useVoice: ${useVoice}, isPaused: ${isPaused}, isSpeaking: ${isSpeaking}, isListening: ${isListening}`);
+            if (!recognition || !useVoice || isPaused || isSpeaking) {
+                console.log(`STT: Not starting - useVoice: ${useVoice}, isPaused: ${isPaused}, isSpeaking: ${isSpeaking}`);
                 if (isSpeaking) document.getElementById('status-text').textContent = 'Waiting for interviewer to finish...';
                 return;
             }
@@ -965,25 +965,17 @@
             const pauseBtn = document.getElementById('pause-btn');
             if (isPaused) {
                 stopAllVoiceActivity(true); // Stop TTS and STT
+                isListening = false; // <-- Explicitly reset
                 if (frameAnalysisInterval) clearInterval(frameAnalysisInterval);
                 pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
                 document.getElementById('status-text').textContent = 'Interview Paused.';
                 console.log("Interview Paused");
-                // Timer automatically pauses when isPaused is true (handled in timer interval)
             } else {
                 pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-                document.getElementById('status-text').textContent = ''; // Clear pause message
+                document.getElementById('status-text').textContent = '';
                 console.log("Interview Resumed");
-                // Timer automatically resumes when isPaused becomes false (handled in timer interval)
-                // If voice mode was active, and bot isn't about to speak, re-initiate listening.
-                // The typical flow is bot speaks then listens. If paused mid-listening,
-                // resuming should ideally continue listening for the current question.
-                if (useVoice && !isSpeaking) { // Don't start listening if bot was/is speaking
-                    // Check if a question is pending an answer.
-                    if (document.getElementById('question-section').style.display === 'block' &&
-                        !document.getElementById('summary-section').style.display === 'block') {
-                        startListening();
-                    }
+                if (useVoice && !isSpeaking) {
+                    startListening(); // Always try to start listening on resume
                 }
                 if (useCamera && cameraStream) startFrameAnalysis();
             }
@@ -1459,8 +1451,8 @@
         }
 
 
-        async function submitFeedback() {
-    const feedback = document.getElementById('feedback-input').value.trim();
+        async function submitFeedback(button) {
+    const feedback = button.parentNode.querySelector('textarea').value.trim();
     const questionText = document.getElementById('question-text').textContent;
 
     if (!feedback) {
@@ -1478,8 +1470,7 @@
         const result = await response.json();
         if (result.success) {
             alert("Thank you for your feedback!");
-            document.getElementById('feedback-input').value = "";
-            document.getElementById('feedback-box').style.display = 'none';
+            button.parentNode.style.display = 'none';
         } else {
             alert("Error submitting feedback: " + result.error);
         }
